@@ -1,0 +1,1048 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: workflowinfoes.workflow.intersight.jet.crossplane.io
+spec:
+  group: workflow.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: WorkflowInfo
+    listKind: WorkflowInfoList
+    plural: workflowinfoes
+    singular: workflowinfo
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: WorkflowInfo is the Schema for the WorkflowInfos API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WorkflowInfoSpec defines the desired state of WorkflowInfo
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  account:
+                    description: A reference to a iamAccount resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  action:
+                    description: The action of the workflow such as start, cancel,
+                      retry, pause. * `None` - No action is set, this is the default
+                      value for action field. * `Create` - Create a new instance of
+                      the workflow but it does not start the execution of the workflow.
+                      Use the Start action to start execution of the workflow. * `Start`
+                      - Start a new execution of the workflow. * `Pause` - Pause the
+                      workflow, this can only be issued on workflows that are in running
+                      state. * `Resume` - Resume the workflow which was previously
+                      paused through pause action on the workflow. * `Retry` - Retry
+                      the workflow that has previously reached a final state and has
+                      the retryable property set to true. A running or waiting workflow
+                      cannot be retried. If the property retryFromTaskName is also
+                      passed along with this action, the workflow will be started
+                      from that specific task, otherwise the workflow will be restarted
+                      from the first task.  The task name in retryFromTaskName must
+                      be one of the tasks that completed or failed in the previous
+                      run. It is not possible to retry a workflow from a task which
+                      wasn't run in the previous iteration. * `RetryFailed` - Retry
+                      the workflow that has failed. A running or waiting workflow
+                      or a workflow that completed successfully cannot be retried.
+                      Only the tasks that failed in the previous run will be retried
+                      and the rest of workflow will be run. This action does not restart
+                      the workflow and also does not support retrying from a specific
+                      task. * `Cancel` - Cancel the workflow that is in running or
+                      waiting state.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  associatedObject:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  cleanupTime:
+                    description: The time when the workflow info will be removed from
+                      database.
+                    type: string
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  email:
+                    description: The email address of the user who started this workflow.
+                    type: string
+                  endTime:
+                    description: The time when the workflow reached a final state.
+                    type: string
+                  failedWorkflowCleanupDuration:
+                    description: The duration in hours after which the workflow info
+                      for failed, terminated or timed out workflow will be removed
+                      from database.
+                    format: int64
+                    type: integer
+                  input:
+                    description: All the given inputs for the workflow.
+                    type: string
+                  instId:
+                    description: A workflow instance Id which is the unique identified
+                      for the workflow execution.
+                    type: string
+                  internal:
+                    description: Denotes if this workflow is internal and should be
+                      hidden from user view of running workflows.
+                    type: boolean
+                  lastAction:
+                    description: The last action that was issued on the workflow is
+                      saved in this field. * `None` - No action is set, this is the
+                      default value for action field. * `Create` - Create a new instance
+                      of the workflow but it does not start the execution of the workflow.
+                      Use the Start action to start execution of the workflow. * `Start`
+                      - Start a new execution of the workflow. * `Pause` - Pause the
+                      workflow, this can only be issued on workflows that are in running
+                      state. * `Resume` - Resume the workflow which was previously
+                      paused through pause action on the workflow. * `Retry` - Retry
+                      the workflow that has previously reached a final state and has
+                      the retryable property set to true. A running or waiting workflow
+                      cannot be retried. If the property retryFromTaskName is also
+                      passed along with this action, the workflow will be started
+                      from that specific task, otherwise the workflow will be restarted
+                      from the first task.  The task name in retryFromTaskName must
+                      be one of the tasks that completed or failed in the previous
+                      run. It is not possible to retry a workflow from a task which
+                      wasn't run in the previous iteration. * `RetryFailed` - Retry
+                      the workflow that has failed. A running or waiting workflow
+                      or a workflow that completed successfully cannot be retried.
+                      Only the tasks that failed in the previous run will be retried
+                      and the rest of workflow will be run. This action does not restart
+                      the workflow and also does not support retrying from a specific
+                      task. * `Cancel` - Cancel the workflow that is in running or
+                      waiting state.
+                    type: string
+                  message:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        message:
+                          description: An i18n message that can be translated in multiple
+                            languages to support internationalization.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        severity:
+                          description: The severity of the Task or Workflow message
+                            warning/error/info etc. * `Info` - The enum represents
+                            the log level to be used to convey info message. * `Warning`
+                            - The enum represents the log level to be used to convey
+                            warning message. * `Debug` - The enum represents the log
+                            level to be used to convey debug message. * `Error` -
+                            The enum represents the log level to be used to convey
+                            error message.
+                          type: string
+                      type: object
+                    type: array
+                  metaVersion:
+                    description: Version of the workflow metadata for which this workflow
+                      execution was started.
+                    format: int64
+                    type: integer
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  organization:
+                    description: A reference to a organizationOrganization resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  output:
+                    description: All the generated outputs for the workflow.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  parentTaskInfo:
+                    description: A reference to a workflowTaskInfo resource. When
+                      the $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  pauseReason:
+                    description: Denotes the reason workflow is in paused status.
+                      * `None` - Pause reason is none, which indicates there is no
+                      reason for the pause state. * `TaskWithWarning` - Pause reason
+                      indicates the workflow is in this state due to a task that has
+                      a status as completed with warnings. * `SystemMaintenance` -
+                      Pause reason indicates the workflow is in this state based on
+                      actions of system admin for maintenance.
+                    type: string
+                  pendingDynamicWorkflowInfo:
+                    description: A reference to a workflowPendingDynamicWorkflowInfo
+                      resource. When the $expand query parameter is specified, the
+                      referenced resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permission:
+                    description: A reference to a iamPermission resource. When the
+                      $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  progress:
+                    description: This field indicates percentage of workflow task
+                      execution.
+                    type: number
+                  properties:
+                    description: Type to capture all the properties for the workflow
+                      info passed on from workflow definition.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        retryable:
+                          description: When true, this workflow can be retried if
+                            has not been modified for more than a period of 2 weeks.
+                          type: boolean
+                        rollbackAction:
+                          description: Status of rollback for this workflow instance.
+                            The rollback action of the workflow can be enabled, disabled,
+                            completed. * `Disabled` - Status of the rollback action
+                            when workflow is disabled for rollback. * `Enabled` -
+                            Status of the rollback action when workflow is enabled
+                            for rollback. * `Completed` - Status of the rollback action
+                            once workflow completes the rollback for all eligible
+                            tasks.
+                          type: string
+                      type: object
+                    type: array
+                  retryFromTaskName:
+                    description: This field is applicable when Retry action is issued
+                      for a workflow which is in 'final' state. When this field is
+                      not specified, the workflow will be retried from the start i.e.,
+                      the first task. When this field is specified then the workflow
+                      will be retried from the specified task. This field should specify
+                      the task name which is the unique name of the task within the
+                      workflow. The task name must be one of the tasks that completed
+                      or failed in the previous run. It is not possible to retry a
+                      workflow from a task which wasn't run in the previous iteration.
+                    type: string
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  src:
+                    description: The source microservice name which is the owner for
+                      this workflow.
+                    type: string
+                  startTime:
+                    description: The time when the workflow was started for execution.
+                    type: string
+                  status:
+                    description: A status of the workflow (RUNNING, WAITING, COMPLETED,
+                      TIME_OUT, FAILED).
+                    type: string
+                  successWorkflowCleanupDuration:
+                    description: The duration in hours after which the workflow info
+                      for successful workflow will be removed from database.
+                    format: int64
+                    type: integer
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  taskInfos:
+                    description: An array of relationships to workflowTaskInfo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  traceId:
+                    description: The trace id to keep track of workflow execution.
+                    type: string
+                  type:
+                    description: A type of the workflow (serverconfig, ansible_monitoring).
+                    type: string
+                  userActionRequired:
+                    description: Property will be set when an user action is required
+                      on the workflow. This can be because the workflow is waiting
+                      for a wait task to be updated, workflow is paused or workflow
+                      launched by a configuration object has failed and needs to be
+                      retried in order to complete successfully.
+                    type: boolean
+                  userId:
+                    description: The user identifier which indicates the user that
+                      started this workflow.
+                    type: string
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                  waitReason:
+                    description: Denotes the reason workflow is in waiting status.
+                      * `None` - Wait reason is none, which indicates there is no
+                      reason for the waiting state. * `GatherTasks` - Wait reason
+                      is gathering tasks, which indicates the workflow is in this
+                      state in order to gather tasks. * `Duplicate` - Wait reason
+                      is duplicate, which indicates the workflow is a duplicate of
+                      current running workflow. * `RateLimit` - Wait reason is rate
+                      limit, which indicates the workflow is rate limited by account/instance
+                      level throttling threshold. * `WaitTask` - Wait reason when
+                      there are one or more wait tasks in the workflow which are yet
+                      to receive a task status update. * `PendingRetryFailed` - Wait
+                      reason when the workflow is pending a RetryFailed action. *
+                      `WaitingToStart` - Workflow is waiting to start on workflow
+                      engine.
+                    type: string
+                  workflowCtx:
+                    description: The workflow context which contains initiator and
+                      target information.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        initiatorCtx:
+                          description: Details about initiator of the workflow.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              initiatorMoid:
+                                description: The moid of the Intersight managed object
+                                  that initiated the workflow.
+                                type: string
+                              initiatorName:
+                                description: Name of the initiator who started the
+                                  workflow. The initiator can be Intersight managed
+                                  object that triggered the workflow.
+                                type: string
+                              initiatorType:
+                                description: Type of Intersight managed object that
+                                  initiated the workflow.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                            type: object
+                          type: array
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        targetCtxList:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              targetMoid:
+                                description: Moid of the target Intersight managed
+                                  object.
+                                type: string
+                              targetName:
+                                description: Name of the target instance.
+                                type: string
+                              targetType:
+                                description: Object type of the target Intersight
+                                  managed object.
+                                type: string
+                            type: object
+                          type: array
+                        workflowMetaName:
+                          description: The name of workflowMeta of the workflow running.
+                          type: string
+                        workflowSubtype:
+                          description: The subtype of the workflow.
+                          type: string
+                        workflowType:
+                          description: Type of the workflow being started. This can
+                            be any string for client services to distinguish workflow
+                            by type.
+                          type: string
+                      type: object
+                    type: array
+                  workflowDefinition:
+                    description: A reference to a workflowWorkflowDefinition resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  workflowMetaType:
+                    description: The type of workflow meta. Derived from the workflow
+                      meta that is used to launch this workflow instance. * `SystemDefined`
+                      - System defined workflow definition. * `UserDefined` - User
+                      defined workflow definition. * `Dynamic` - Dynamically defined
+                      workflow definition.
+                    type: string
+                  workflowTaskCount:
+                    description: Total number of workflow tasks in this workflow.
+                    format: int64
+                    type: integer
+                  workflowWorkerTaskCount:
+                    description: Total number of worker tasks in this workflow. This
+                      count doesn't include the control tasks in the workflow.
+                    format: int64
+                    type: integer
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: WorkflowInfoStatus defines the observed state of WorkflowInfo.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

@@ -1,0 +1,849 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: ethadapterpolicies.vnic.intersight.jet.crossplane.io
+spec:
+  group: vnic.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: EthAdapterPolicy
+    listKind: EthAdapterPolicyList
+    plural: ethadapterpolicies
+    singular: ethadapterpolicy
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: EthAdapterPolicy is the Schema for the EthAdapterPolicys API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EthAdapterPolicySpec defines the desired state of EthAdapterPolicy
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  advancedFilter:
+                    description: Enables advanced filtering on the interface.
+                    type: boolean
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  arfsSettings:
+                    description: Settings for Accelerated Receive Flow Steering to
+                      reduce the network latency and increase CPU cache efficiency.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        enabled:
+                          description: Status of Accelerated Receive Flow Steering
+                            on the virtual ethernet interface.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  completionQueueSettings:
+                    description: Completion Queue resource settings.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        nrCount:
+                          description: The number of completion queue resources to
+                            allocate. In general, the number of completion queue resources
+                            to allocate is equal to the number of transmit queue resources
+                            plus the number of receive queue resources.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        ringSize:
+                          description: The number of descriptors in each completion
+                            queue.
+                          format: int64
+                          type: integer
+                      type: object
+                    type: array
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  description:
+                    description: Description of the policy.
+                    type: string
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  geneveEnabled:
+                    description: GENEVE offload protocol allows you to create logical
+                      networks that span physical network boundaries by allowing any
+                      information to be encoded in a packet and passed between tunnel
+                      endpoints.
+                    type: boolean
+                  interruptScaling:
+                    description: Enables Interrupt Scaling on the interface.
+                    type: boolean
+                  interruptSettings:
+                    description: Interrupt Settings for the virtual ethernet interface.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        coalescingTime:
+                          description: The time to wait between interrupts or the
+                            idle period that must be encountered before an interrupt
+                            is sent. To turn off interrupt coalescing, enter 0 (zero)
+                            in this field.
+                          format: int64
+                          type: integer
+                        coalescingType:
+                          description: Interrupt Coalescing Type. This can be one
+                            of the following:- MIN  - The system waits for the time
+                            specified in the Coalescing Time field before sending
+                            another interrupt event IDLE - The system does not send
+                            an interrupt until there is a period of no activity lasting
+                            as least as long as the time specified in the Coalescing
+                            Time field. * `MIN` - The system waits for the time specified
+                            in the Coalescing Time field before sending another interrupt
+                            event. * `IDLE` - The system does not send an interrupt
+                            until there is a period of no activity lasting as least
+                            as long as the time specified in the Coalescing Time field.
+                          type: string
+                        mode:
+                          description: Preferred driver interrupt mode. This can be
+                            one of the following:- MSIx - Message Signaled Interrupts
+                            (MSI) with the optional extension. MSI  - MSI only. INTx
+                            - PCI INTx interrupts. MSIx is the recommended option.
+                            * `MSIx` - Message Signaled Interrupt (MSI) mechanism
+                            with the optional extension (MSIx). MSIx is the recommended
+                            and default option. * `MSI` - Message Signaled Interrupt
+                            (MSI) mechanism that treats messages as interrupts. *
+                            `INTx` - Line-based interrupt (INTx) mechanism similar
+                            to the one used in Legacy systems.
+                          type: string
+                        nrCount:
+                          description: The number of interrupt resources to allocate.
+                            Typical value is be equal to the number of completion
+                            queue resources.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                      type: object
+                    type: array
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  nvgreSettings:
+                    description: Network Virtualization using Generic Routing Encapsulation
+                      Settings.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        enabled:
+                          description: Status of the Network Virtualization using
+                            Generic Routing Encapsulation on the virtual ethernet
+                            interface.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                      type: object
+                    type: array
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  organization:
+                    description: A reference to a organizationOrganization resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  roceSettings:
+                    description: Settings for RDMA over Converged Ethernet.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        classOfService:
+                          description: The Class of Service for RoCE on this virtual
+                            interface. * `5` - RDMA CoS Service Level 5. * `1` - RDMA
+                            CoS Service Level 1. * `2` - RDMA CoS Service Level 2.
+                            * `4` - RDMA CoS Service Level 4. * `6` - RDMA CoS Service
+                            Level 6.
+                          format: int64
+                          type: integer
+                        enabled:
+                          description: If enabled sets RDMA over Converged Ethernet
+                            (RoCE) on this virtual interface.
+                          type: boolean
+                        memoryRegions:
+                          description: The number of memory regions per adapter. Recommended
+                            value = integer power of 2.
+                          format: int64
+                          type: integer
+                        nrVersion:
+                          description: Configure RDMA over Converged Ethernet (RoCE)
+                            version on the virtual interface. Only RoCEv1 is supported
+                            on Cisco VIC 13xx series adapters and only RoCEv2 is supported
+                            on Cisco VIC 14xx series adapters. * `1` - RDMA over Converged
+                            Ethernet Protocol Version 1. * `2` - RDMA over Converged
+                            Ethernet Protocol Version 2.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        queuePairs:
+                          description: The number of queue pairs per adapter. Recommended
+                            value = integer power of 2.
+                          format: int64
+                          type: integer
+                        resourceGroups:
+                          description: The number of resource groups per adapter.
+                            Recommended value = be an integer power of 2 greater than
+                            or equal to the number of CPU cores on the system for
+                            optimum performance.
+                          format: int64
+                          type: integer
+                      type: object
+                    type: array
+                  rssHashSettings:
+                    description: Receive Side Scaling allows the incoming traffic
+                      to be spread across multiple CPU cores.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        ipv4Hash:
+                          description: When enabled, the IPv4 address is used for
+                            traffic distribution.
+                          type: boolean
+                        ipv6ExtHash:
+                          description: When enabled, the IPv6 extensions are used
+                            for traffic distribution.
+                          type: boolean
+                        ipv6Hash:
+                          description: When enabled, the IPv6 address is used for
+                            traffic distribution.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        tcpIpv4Hash:
+                          description: When enabled, both the IPv4 address and TCP
+                            port number are used for traffic distribution.
+                          type: boolean
+                        tcpIpv6ExtHash:
+                          description: When enabled, both the IPv6 extensions and
+                            TCP port number are used for traffic distribution.
+                          type: boolean
+                        tcpIpv6Hash:
+                          description: When enabled, both the IPv6 address and TCP
+                            port number are used for traffic distribution.
+                          type: boolean
+                        udpIpv4Hash:
+                          description: When enabled, both the IPv4 address and UDP
+                            port number are used for traffic distribution.
+                          type: boolean
+                        udpIpv6Hash:
+                          description: When enabled, both the IPv6 address and UDP
+                            port number are used for traffic distribution.
+                          type: boolean
+                      type: object
+                    type: array
+                  rssSettings:
+                    description: Receive Side Scaling allows the incoming traffic
+                      to be spread across multiple CPU cores.
+                    type: boolean
+                  rxQueueSettings:
+                    description: Receive Queue resouce settings.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        nrCount:
+                          description: The number of queue resources to allocate.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        ringSize:
+                          description: The number of descriptors in each queue.
+                          format: int64
+                          type: integer
+                      type: object
+                    type: array
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  tcpOffloadSettings:
+                    description: The TCP offload settings decide whether to offload
+                      the TCP related network functions from the CPU to the network
+                      hardware or not.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        largeReceive:
+                          description: Enables the reassembly of segmented packets
+                            in hardware before sending them to the CPU.
+                          type: boolean
+                        largeSend:
+                          description: Enables the CPU to send large packets to the
+                            hardware for segmentation.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        rxChecksum:
+                          description: When enabled, the CPU sends all packet checksums
+                            to the hardware for validation.
+                          type: boolean
+                        txChecksum:
+                          description: When enabled, the CPU sends all packets to
+                            the hardware so that the checksum can be calculated.
+                          type: boolean
+                      type: object
+                    type: array
+                  txQueueSettings:
+                    description: Transmit Queue resource settings.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        nrCount:
+                          description: The number of queue resources to allocate.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        ringSize:
+                          description: The number of descriptors in each queue.
+                          format: int64
+                          type: integer
+                      type: object
+                    type: array
+                  uplinkFailbackTimeout:
+                    description: Uplink Failback Timeout in seconds when uplink failover
+                      is enabled for a vNIC. After a vNIC has started using its secondary
+                      interface, this setting controls how long the primary interface
+                      must be available before the system resumes using the primary
+                      interface for the vNIC.
+                    format: int64
+                    type: integer
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                  vxlanSettings:
+                    description: Virtual Extensible LAN Protocol Settings.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        enabled:
+                          description: Status of the Virtual Extensible LAN Protocol
+                            on the virtual ethernet interface.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: EthAdapterPolicyStatus defines the observed state of EthAdapterPolicy.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

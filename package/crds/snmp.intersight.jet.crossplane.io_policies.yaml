@@ -1,0 +1,663 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: policies.snmp.intersight.jet.crossplane.io
+spec:
+  group: snmp.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: Policy
+    listKind: PolicyList
+    plural: policies
+    singular: policy
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Policy is the Schema for the Policys API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: PolicySpec defines the desired state of Policy
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accessCommunityString:
+                    description: The default SNMPv1, SNMPv2c community name or SNMPv3
+                      username to include on any trap messages sent to the SNMP host.
+                      The name can be 18 characters long.
+                    type: string
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  communityAccess:
+                    description: Controls access to the information in the inventory
+                      tables. Applicable only for SNMPv1 and SNMPv2c users. * `Disabled`
+                      - Blocks access to the information in the inventory tables.
+                      * `Limited` - Partial access to read the information in the
+                      inventory tables. * `Full` - Full access to read the information
+                      in the inventory tables.
+                    type: string
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  description:
+                    description: Description of the policy.
+                    type: string
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  enabled:
+                    description: State of the SNMP Policy on the endpoint. If enabled,
+                      the endpoint sends SNMP traps to the designated host.
+                    type: boolean
+                  engineId:
+                    description: User-defined unique identification of the static
+                      engine.
+                    type: string
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  organization:
+                    description: A reference to a organizationOrganization resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  profiles:
+                    description: An array of relationships to policyAbstractConfigProfile
+                      resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  snmpPort:
+                    description: Port on which Cisco IMC SNMP agent runs. Enter a
+                      value between 1-65535. Reserved ports not allowed (22, 23, 80,
+                      123, 389, 443, 623, 636, 2068, 3268, 3269).
+                    format: int64
+                    type: integer
+                  snmpTraps:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        community:
+                          description: SNMP community group used for sending SNMP
+                            trap to other devices. Applicable only for SNMP v2c.
+                          type: string
+                        destination:
+                          description: Address to which the SNMP trap information
+                            is sent.
+                          type: string
+                        enabled:
+                          description: Enables/disables the trap on the server If
+                            enabled, trap is active on the server.
+                          type: boolean
+                        nrVersion:
+                          description: SNMP version used for the trap. * `V3` - SNMP
+                            v3 trap version notifications. * `V2` - SNMP v2 trap version
+                            notifications.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        port:
+                          description: Port used by the server to communicate with
+                            the trap destination. Enter a value between 1-65535. Reserved
+                            ports not allowed (22, 23, 80, 123, 389, 443, 623, 636,
+                            2068, 3268, 3269).
+                          format: int64
+                          type: integer
+                        type:
+                          description: Type of trap which decides whether to receive
+                            a notification when a trap is received at the destination.
+                            * `Trap` - Do not receive notifications when trap is sent
+                            to the destination. * `Inform` - Receive notifications
+                            when trap is sent to the destination. This option is valid
+                            only for V2 users.
+                          type: string
+                        user:
+                          description: SNMP user for the trap. Applicable only to
+                            SNMPv3.
+                          type: string
+                      type: object
+                    type: array
+                  snmpUsers:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        authPassword:
+                          description: Authorization password for the user.
+                          type: string
+                        authType:
+                          description: Authorization protocol for authenticating the
+                            user. * `NA` - Authentication protocol is not applicable.
+                            * `MD5` - MD5 protocol is used to authenticate SNMP user.
+                            * `SHA` - SHA protocol is used to authenticate SNMP user.
+                            * `SHA-224` - SHA-224 protocol is used to authenticate
+                            SNMP user. * `SHA-256` - SHA-256 protocol is used to authenticate
+                            SNMP user. * `SHA-384` - SHA-384 protocol is used to authenticate
+                            SNMP user. * `SHA-512` - SHA-512 protocol is used to authenticate
+                            SNMP user.
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        isAuthPasswordSet:
+                          description: Indicates whether the value of the 'authPassword'
+                            property has been set.
+                          type: boolean
+                        isPrivacyPasswordSet:
+                          description: Indicates whether the value of the 'privacyPassword'
+                            property has been set.
+                          type: boolean
+                        name:
+                          description: SNMP username. Must have a minimum of 1 and
+                            and a maximum of 31 characters.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        privacyPassword:
+                          description: Privacy password for the user.
+                          type: string
+                        privacyType:
+                          description: Privacy protocol for the user. * `NA` - Privacy
+                            protocol is not applicable. * `DES` - DES privacy protocol
+                            is used for SNMP user. * `AES` - AES privacy protocol
+                            is used for SNMP user.
+                          type: string
+                        securityLevel:
+                          description: Security mechanism used for communication between
+                            agent and manager. * `AuthPriv` - The user requires both
+                            an authorization password and a privacy password. * `NoAuthNoPriv`
+                            - The user does not require an authorization or privacy
+                            password. * `AuthNoPriv` - The user requires an authorization
+                            password but not a privacy password.
+                          type: string
+                      type: object
+                    type: array
+                  sysContact:
+                    description: Contact person responsible for the SNMP implementation.
+                      Enter a string up to 64 characters, such as an email address
+                      or a name and telephone number.
+                    type: string
+                  sysLocation:
+                    description: Location of host on which the SNMP agent (server)
+                      runs.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  trapCommunity:
+                    description: SNMP community group used for sending SNMP trap to
+                      other devices. Valid only for SNMPv2c users.
+                    type: string
+                  v2Enabled:
+                    description: State of the SNMP v2c on the endpoint. If enabled,
+                      the endpoint sends SNMP v2c properties to the designated host.
+                    type: boolean
+                  v3Enabled:
+                    description: State of the SNMP v3 on the endpoint. If enabled,
+                      the endpoint sends SNMP v3 properties to the designated host.
+                    type: boolean
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: PolicyStatus defines the observed state of Policy.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

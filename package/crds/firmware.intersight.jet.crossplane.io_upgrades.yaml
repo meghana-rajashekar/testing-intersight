@@ -1,0 +1,963 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: upgrades.firmware.intersight.jet.crossplane.io
+spec:
+  group: firmware.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: Upgrade
+    listKind: UpgradeList
+    plural: upgrades
+    singular: upgrade
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Upgrade is the Schema for the Upgrades API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UpgradeSpec defines the desired state of Upgrade
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  device:
+                    description: A reference to a assetDeviceRegistration resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  directDownload:
+                    description: Direct download options in case the upgradeType is
+                      direct download based upgrade.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        httpServer:
+                          description: HTTP Server option when the image source is
+                            a local HTTPS server.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              locationLink:
+                                description: HTTP/HTTPS link to the image. Accepted
+                                  formats HTTP[s]://server-hostname/share/image or
+                                  HTTP[s]://serverip/share/image. For a successful
+                                  upgrade, the remote share server must have network
+                                  connectivity with the CIMC of the selected devices.
+                                type: string
+                              mountOptions:
+                                description: Mount option as configured on the HTTP
+                                  server. Empty if nothing is configured.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                            type: object
+                          type: array
+                        imageSource:
+                          description: Source type referring the image to be downloaded
+                            from CCO or from a local HTTPS server. * `cisco` - Image
+                            to be downloaded from Cisco software repository. * `localHttp`
+                            - Image to be downloaded from a https server.
+                          type: string
+                        isPasswordSet:
+                          description: Indicates whether the value of the 'password'
+                            property has been set.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        password:
+                          description: Password as configured on the local https server.
+                          type: string
+                        upgradeoption:
+                          description: Option to control the upgrade, e.g., sd_upgrade_mount_only
+                            - download the image into sd and upgrade wait for the
+                            server on-next boot. * `sd_upgrade_mount_only` - Direct
+                            upgrade SD upgrade mount only. * `sd_download_only` -
+                            Direct upgrade SD download only. * `sd_upgrade_only` -
+                            Direct upgrade SD upgrade only. * `sd_upgrade_full` -
+                            Direct upgrade SD upgrade full. * `download_only` - Direct
+                            upgrade image download only. * `upgrade_full` - The upgrade
+                            downloads or mounts the image, and reboots immediately
+                            for an upgrade. * `upgrade_mount_only` - The upgrade downloads
+                            or mounts the image. The upgrade happens in next reboot.
+                            * `chassis_upgrade_full` - Direct upgrade chassis upgrade
+                            full.
+                          type: string
+                        username:
+                          description: Username as configured on the local https server.
+                          type: string
+                      type: object
+                    type: array
+                  distributable:
+                    description: A reference to a firmwareDistributable resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  excludeComponentList:
+                    items:
+                      type: string
+                    type: array
+                  fileServer:
+                    description: Location of the image in user software repository.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data. The enum values provides the list of
+                            concrete types that can be instantiated from this abstract
+                            type.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property. The enum values provides the list of concrete
+                            types that can be instantiated from this abstract type.
+                          type: string
+                      type: object
+                    type: array
+                  includeComponentList:
+                    description: The components which are not to be excluded for server
+                      firmware upgrade.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        includeLocalDiskList:
+                          items:
+                            type: string
+                          type: array
+                        includeStorageControllerList:
+                          items:
+                            type: string
+                          type: array
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                      type: object
+                    type: array
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  networkShare:
+                    description: Deprecated (Use 'fileServer' property). Network share
+                      options in case of the upgradeType is network share based upgrade.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        cifsServer:
+                          description: CIFS file server option for network share upgrade.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              fileLocation:
+                                description: The location to the image file. The accepted
+                                  format is IP-or-hostname/folder1/folder2/.../imageFile.
+                                type: string
+                              mountOptions:
+                                description: Mount option (Authentication Protocol)
+                                  as configured on the CIFS Server. Example:ntlmv2.
+                                  * `none` - The default authentication protocol is
+                                  decided by the endpoint. * `ntlm` - The external
+                                  CIFS server is configured with ntlm as the authentication
+                                  protocol. * `ntlmi` - Mount options of CIFS file
+                                  server is ntlmi. * `ntlmv2` - Mount options of CIFS
+                                  file server is ntlmv2. * `ntlmv2i` - Mount options
+                                  of CIFS file server is ntlmv2i. * `ntlmssp` - Mount
+                                  options of CIFS file server is ntlmssp. * `ntlmsspi`
+                                  - Mount options of CIFS file server is ntlmsspi.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              remoteFile:
+                                description: Filename of the image in the remote share
+                                  location. Example:ucs-c220m5-huu-3.1.2c.iso.
+                                type: string
+                              remoteIp:
+                                description: CIFS Server Hostname or IP Address. For
+                                  example:CIFS-server-hostname or 10.10.8.7. The remote
+                                  share server should have network connectivity with
+                                  the CIMC of the selected devices for a successful
+                                  upgrade.
+                                type: string
+                              remoteShare:
+                                description: Directory where the image is stored.
+                                  Example:share/subfolder.
+                                type: string
+                            type: object
+                          type: array
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        httpServer:
+                          description: HTTP (for WWW) file server option for network
+                            share upgrade.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              locationLink:
+                                description: HTTP/HTTPS link to the image. Accepted
+                                  formats HTTP[s]://server-hostname/share/image or
+                                  HTTP[s]://serverip/share/image. For a successful
+                                  upgrade, the remote share server must have network
+                                  connectivity with the CIMC of the selected devices.
+                                type: string
+                              mountOptions:
+                                description: Mount option as configured on the HTTP
+                                  server. Empty if nothing is configured.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                            type: object
+                          type: array
+                        isPasswordSet:
+                          description: Indicates whether the value of the 'password'
+                            property has been set.
+                          type: boolean
+                        mapType:
+                          description: File server protocols such as CIFS, NFS, WWW
+                            for HTTP (S) that hosts the image. * `nfs` - File server
+                            protocol used is NFS. * `cifs` - File server protocol
+                            used is CIFS. * `www` - File server protocol used is WWW.
+                          type: string
+                        nfsServer:
+                          description: NFS file server option for network share upgrade.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              fileLocation:
+                                description: The location to the image file. The accepted
+                                  format is IP-or-hostname/folder1/folder2/.../imageFile.
+                                type: string
+                              mountOptions:
+                                description: Mount option as configured on the NFS
+                                  Server. For example:nolock.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              remoteFile:
+                                description: Filename of the image in the remote share
+                                  location. For example:ucs-c220m5-huu-3.1.2c.iso.
+                                type: string
+                              remoteIp:
+                                description: NFS Server Hostname or IP Address. For
+                                  example:NFS-server-hostname or 10.10.8.7. The remote
+                                  share server should have network connectivity with
+                                  the CIMC of the selected devices for a successful
+                                  upgrade.
+                                type: string
+                              remoteShare:
+                                description: Directory where the image is stored.
+                                  For example:/share/subfolder.
+                                type: string
+                            type: object
+                          type: array
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        password:
+                          description: Password as configured on the file server.
+                          type: string
+                        upgradeoption:
+                          description: Option to control the upgrade operation. Some
+                            examples, 1) nw_upgrade_mount_only - mount the image from
+                            a file server and run the upgrade on the next server boot
+                            and 2) nw_upgrade_full - mount the image and immediately
+                            run the upgrade. * `nw_upgrade_full` - Network upgrade
+                            option for full upgrade. * `nw_upgrade_mount_only` - Network
+                            upgrade mount only.
+                          type: string
+                        username:
+                          description: Username as configured on the file server.
+                          type: string
+                      type: object
+                    type: array
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  release:
+                    description: A reference to a softwarerepositoryRelease resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  server:
+                    description: A reference to a computePhysical resource. When the
+                      $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  skipEstimateImpact:
+                    description: User has the option to skip the estimate impact calculation.
+                    type: boolean
+                  status:
+                    description: Status of the upgrade operation. * `NONE` - Upgrade
+                      status is not populated. * `IN_PROGRESS` - The upgrade is in
+                      progress. * `SUCCESSFUL` - The upgrade successfully completed.
+                      * `FAILED` - The upgrade shows failed status. * `TERMINATED`
+                      - The upgrade has been terminated.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  upgradeImpact:
+                    description: A reference to a firmwareUpgradeImpactStatus resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  upgradeStatus:
+                    description: A reference to a firmwareUpgradeStatus resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  upgradeType:
+                    description: Desired upgrade mode to choose either direct download
+                      based upgrade or network share upgrade. * `direct_upgrade` -
+                      Upgrade mode is direct download. * `network_upgrade` - Upgrade
+                      mode is network upgrade.
+                    type: string
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: UpgradeStatus defines the observed state of Upgrade.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

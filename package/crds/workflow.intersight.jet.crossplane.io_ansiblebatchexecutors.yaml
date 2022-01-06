@@ -1,0 +1,641 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: ansiblebatchexecutors.workflow.intersight.jet.crossplane.io
+spec:
+  group: workflow.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: AnsibleBatchExecutor
+    listKind: AnsibleBatchExecutorList
+    plural: ansiblebatchexecutors
+    singular: ansiblebatchexecutor
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AnsibleBatchExecutor is the Schema for the AnsibleBatchExecutors
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnsibleBatchExecutorSpec defines the desired state of AnsibleBatchExecutor
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  batch:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        assetTargetMoid:
+                          description: Asset target defines the remote target endpoints
+                            which are either managed by Intersight or their service
+                            APIs are invoked from Intersight. Generic API executor
+                            service Jasmine can invoke these remote APIs via its executors.
+                            Asset targets can be accessed directly for cloud targets
+                            or via an associated Intersight Assist. Prerequisite to
+                            use asset targets is to persist the target details. Asset
+                            target MoRef can be given as task input of type TargetDataType.
+                            Fusion determines and populates the target context with
+                            the Assist if associated with. It is set internally at
+                            the API level. In case of an associated assist, it is
+                            used by Assist to fetch the target details and form the
+                            API request to send to endpoints. In case of cloud asset
+                            targets, Jasmine fetched the target details from DB, forms
+                            the API request and sends it to the target.
+                          type: string
+                        body:
+                          description: The optional request body that is sent as part
+                            of this API request. The request body can contain a golang
+                            template that can be populated with task input parameters
+                            and previous API output parameters.
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data. The enum values provides the list of
+                            concrete types that can be instantiated from this abstract
+                            type.
+                          type: string
+                        contentType:
+                          description: Intersight Orchestrator, with the support of
+                            response parser specification, can extract the values
+                            from API responses and map them to task output parameters.
+                            The value extraction is supported for response content
+                            types XML, JSON and Text. The type of the content that
+                            gets passed as payload and response in this API. The supported
+                            values are json, xml, text.
+                          type: string
+                        description:
+                          description: A description that task designer can add to
+                            individual API requests that explain what the API call
+                            is about.
+                          type: string
+                        errorContentType:
+                          description: Intersight Orchestrator, with the support of
+                            response parser specification, can extract the values
+                            from API responses and map them to task output parameters.
+                            The value extraction is supported for response content
+                            types XML, JSON and Text. Optional input to specify the
+                            content type in case of error API response. This should
+                            be used if the content type of error response is different
+                            from that of the success response. If not specified, contentType
+                            input value is used to parse the error response.
+                          type: string
+                        label:
+                          description: A user friendly label that task designers have
+                            given to the batch API request.
+                          type: string
+                        name:
+                          description: A reference name for this API request within
+                            the batch API request. This name shall be used to map
+                            the API output parameters to subsequent API input parameters
+                            within a batch API task.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property. The enum values provides the list of concrete
+                            types that can be instantiated from this abstract type.
+                          type: string
+                        outcomes:
+                          description: All the possible outcomes of this API are captured
+                            here. Outcomes property is a collection property of type
+                            workflow.Outcome objects. The outcomes can be mapped to
+                            the message to be shown. The outcomes are evaluated in
+                            the order they are given. At the end of the outcomes list,
+                            an catchall success/fail outcome can be added with condition
+                            as 'true'. This is an optional property and if not specified
+                            the task will be marked as success.
+                          type: string
+                        responseSpec:
+                          description: The optional grammar specification for parsing
+                            the response to extract the required values. The specification
+                            should have extraction specification specified for all
+                            the API output parameters.
+                          type: string
+                        skipOnCondition:
+                          description: The skip expression, if provided, allows the
+                            batch API executor to skip the api execution when the
+                            given expression evaluates to true. The expression is
+                            given as such a golang template that has to be evaluated
+                            to a final content true/false. The expression is an optional
+                            and in case not provided, the API will always be executed.
+                          type: string
+                        startDelay:
+                          description: The delay in seconds after which the API needs
+                            to be executed. By default, the given API is executed
+                            immediately. Specifying a start delay adds to the delay
+                            to execution. Start Delay is not supported for the first
+                            API in the Batch and cumulative delay of all the APIs
+                            in the Batch should not exceed the task time out.
+                          format: int64
+                          type: integer
+                        timeout:
+                          description: The duration in seconds by which the API response
+                            is expected from the API target. If the end point does
+                            not respond for the API request within this timeout duration,
+                            the task will be marked as failed.
+                          format: int64
+                          type: integer
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  constraints:
+                    description: Enter the constraints on when this task should match
+                      against the task definition.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        targetDataType:
+                          description: List of property constraints that helps to
+                            narrow down task implementations based on target device
+                            input.
+                          type: string
+                      type: object
+                    type: array
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  description:
+                    description: A detailed description about the batch APIs.
+                    type: string
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  outcomes:
+                    description: All the possible outcomes of this task are captured
+                      here. Outcomes property is a collection property of type workflow.Outcome
+                      objects. The outcomes can be mapped to the message to be shown.
+                      The outcomes are evaluated in the order they are given. At the
+                      end of the outcomes list, an catchall success/fail outcome can
+                      be added with condition as 'true'. This is an optional property
+                      and if not specified the task will be marked as success.
+                    type: string
+                  output:
+                    description: Intersight Orchestrator allows the extraction of
+                      required values from API responses using the API response grammar.
+                      These extracted values can be mapped to task output parameters
+                      defined in task definition. The mapping of API output parameters
+                      to the task output parameters is provided as JSON in this property.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  retryFromFailedApi:
+                    description: When an execution of a nth API in the Batch fails,
+                      Retry from falied API flag indicates if the execution should
+                      start from the nth API or the first API during task retry. By
+                      default the value is set to false.
+                    type: boolean
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  skipOnCondition:
+                    description: The skip expression, if provided, allows the batch
+                      API executor to skip the task execution when the given expression
+                      evaluates to true. The expression is given as such a golang
+                      template that has to be evaluated to a final content true/false.
+                      The expression is an optional and in case not provided, the
+                      API will always be executed.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  taskDefinition:
+                    description: A reference to a workflowTaskDefinition resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: AnsibleBatchExecutorStatus defines the observed state of
+              AnsibleBatchExecutor.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

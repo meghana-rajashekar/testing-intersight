@@ -1,0 +1,790 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: ucsddistributables.software.intersight.jet.crossplane.io
+spec:
+  group: software.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: UcsdDistributable
+    listKind: UcsdDistributableList
+    plural: ucsddistributables
+    singular: ucsddistributable
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: UcsdDistributable is the Schema for the UcsdDistributables API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UcsdDistributableSpec defines the desired state of UcsdDistributable
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  bundleType:
+                    description: The bundle type of the image, as published on cisco.com.
+                    type: string
+                  catalog:
+                    description: A reference to a softwarerepositoryCatalog resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  componentMeta:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        componentLabel:
+                          description: The name of the component in the compressed
+                            HSU bundle.
+                          type: string
+                        componentType:
+                          description: The type of component image within the distributable.
+                            * `ALL` - This represents all the components. * `ALL,HDD`
+                            - This represents all the components plus the HDDs. *
+                            `Drive-U.2` - This represents the U.2 drives that are
+                            SFF/LFF drives (mostly all the drives will fall under
+                            this category). * `Storage` - This represents the storage
+                            controller components. * `None` - This represents none
+                            of the components. * `NXOS` - This represents NXOS components.
+                            * `IOM` - This represents IOM components. * `PSU` - This
+                            represents PSU components. * `CIMC` - This represents
+                            CIMC components. * `BIOS` - This represents BIOS components.
+                            * `PCIE` - This represents PCIE components. * `Drive`
+                            - This represents Drive components. * `DIMM` - This represents
+                            DIMM components. * `BoardController` - This represents
+                            Board Controller components. * `StorageController` - This
+                            represents Storage Controller components. * `Storage-Sasexpander`
+                            - This represents Storage Sas-Expander components. * `Storage-U.2`
+                            - This represents U2 Storage Controller components. *
+                            `HBA` - This represents HBA components. * `GPU` - This
+                            represents GPU components. * `SasExpander` - This represents
+                            SasExpander components. * `MSwitch` - This represents
+                            mSwitch components. * `CMC` - This represents CMC components.
+                          type: string
+                        description:
+                          description: This shows the description of component image
+                            within the distributable.
+                          type: string
+                        disruption:
+                          description: The type of disruption on each component. For
+                            example, host reboot, automatic power cycle, and manual
+                            power cycle. * `None` - Indicates that the component did
+                            not receive a disruption request. * `HostReboot` - Indicates
+                            that the component received a host reboot request. * `EndpointReboot`
+                            - Indicates that the component received an end point reboot
+                            request. * `ManualPowerCycle` - Indicates that the component
+                            received a manual power cycle request. * `AutomaticPowerCycle`
+                            - Indicates that the component received an automatic power
+                            cycle request.
+                          type: string
+                        imagePath:
+                          description: This shows the path of component image within
+                            the distributable.
+                          type: string
+                        isOobSupported:
+                          description: If set, the component can be updated through
+                            out-of-band management, else, is updated through host
+                            service utility boot.
+                          type: boolean
+                        model:
+                          description: The model of the component image in the distributable.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        oobManageability:
+                          items:
+                            type: string
+                          type: array
+                        packedVersion:
+                          description: The image version of components packaged in
+                            the distributable.
+                          type: string
+                        redfishUrl:
+                          description: The redfish target for each component.
+                          type: string
+                        vendor:
+                          description: The version of component image in the distributable.
+                          type: string
+                      type: object
+                    type: array
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  description:
+                    description: User provided description about the file. Cisco provided
+                      description for image inventoried from a Cisco repository.
+                    type: string
+                  distributableMetas:
+                    description: An array of relationships to firmwareDistributableMeta
+                      resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  downloadCount:
+                    description: The number of times this file has been downloaded
+                      from the local repository. It is used by the repository monitoring
+                      process to determine the files that are to be evicted from the
+                      cache.
+                    format: int64
+                    type: integer
+                  guid:
+                    description: The unique identifier for an image in a Cisco repository.
+                    type: string
+                  imageType:
+                    description: The type of image which the distributable falls into
+                      according to the component it can upgrade. For e.g.; Standalone
+                      server, Intersight managed server, UCS Managed Fabric Interconnect.
+                      The field is used in private appliance mode, where image does
+                      not have description populated from CCO.
+                    type: string
+                  importAction:
+                    description: The action to be performed on the imported file.
+                      If 'PreCache' is set, the image will be cached in Appliance.
+                      Applicable in Intersight appliance deployment. If 'Evict' is
+                      set, the cached file will be removed. Applicable in Intersight
+                      appliance deployment. If 'GeneratePreSignedUploadUrl' is set,
+                      generates pre signed URL (s) for the file to be imported into
+                      the repository. Applicable for local machine source. The URL
+                      (s) will be populated under LocalMachine file server. If 'CompleteImportProcess'
+                      is set, the ImportState is marked as 'Imported'. Applicable
+                      for local machine source. If 'Cancel' is set, the ImportState
+                      is marked as 'Failed'. Applicable for local machine source.
+                      * `None` - No action should be taken on the imported file. *
+                      `GeneratePreSignedUploadUrl` - Generate pre signed URL of file
+                      for importing into the repository. * `GeneratePreSignedDownloadUrl`
+                      - Generate pre signed URL of file in the repository to download.
+                      * `CompleteImportProcess` - Mark that the import process of
+                      the file into the repository is complete. * `MarkImportFailed`
+                      - Mark to indicate that the import process of the file into
+                      the repository failed. * `PreCache` - Cache the file into the
+                      Intersight Appliance. * `Cancel` - The cancel import process
+                      for the file into the repository. * `Extract` - The action to
+                      extract the file in the external repository. * `Evict` - Evict
+                      the cached file from the Intersight Appliance.
+                    type: string
+                  importState:
+                    description: The state  of this file in the repository or Appliance.
+                      The importState is updated during the import operation and as
+                      part of the repository monitoring process. * `ReadyForImport`
+                      - The image is ready to be imported into the repository. * `Importing`
+                      - The image is being imported into the repository. * `Imported`
+                      - The image has been extracted and imported into the repository.
+                      * `PendingExtraction` - Indicates that the image has been imported
+                      but not extracted in the repository. * `Extracting` - Indicates
+                      that the image is being extracted into the repository. * `Extracted`
+                      - Indicates that the image has been extracted into the repository.
+                      * `Failed` - The image import from an external source to the
+                      repository has failed. * `MetaOnly` - The image is present in
+                      an external repository. * `ReadyForCache` - The image is ready
+                      to be cached into the Intersight Appliance. * `Caching` - Indicates
+                      that the image is being cached into the Intersight Appliance
+                      or endpoint cache. * `Cached` - Indicates that the image has
+                      been cached into the Intersight Appliance or endpoint cache.
+                      * `CachingFailed` - Indicates that the image caching into the
+                      Intersight Appliance failed or endpoint cache. * `Corrupted`
+                      - Indicates that the image in the local repository (or endpoint
+                      cache) has been corrupted after it was cached. * `Evicted` -
+                      Indicates that the image has been evicted from the Intersight
+                      Appliance (or endpoint cache) to reclaim storage space. * `Invalid`
+                      - Indicates that the corresponding distributable MO has been
+                      removed from the backend. This can be due to unpublishing of
+                      an image.
+                    type: string
+                  importedTime:
+                    description: The time at which this image or file was imported/cached
+                      into the repositry. if the 'ImportState' is 'Imported', the
+                      time at which this image or file was imported. if the 'ImportState'
+                      is 'Cached', the time at which this image or file was cached.
+                    type: string
+                  lastAccessTime:
+                    description: The time at which this file was last downloaded from
+                      the local repository. It is used by the repository monitoring
+                      process to determine the files that are to be evicted from the
+                      cache.
+                    type: string
+                  md5eTag:
+                    description: The MD5 ETag for a file that is stored in Intersight
+                      repository or in the appliance cache. Warning - MD5 is currently
+                      broken and this will be migrated to SHA shortly.
+                    type: string
+                  md5sum:
+                    description: The md5sum checksum of the file. This information
+                      is available for all Cisco distributed images and files imported
+                      to the local repository.
+                    type: string
+                  mdfid:
+                    description: The mdfid of the image provided by cisco.com.
+                    type: string
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  model:
+                    description: The endpoint model for which this firmware image
+                      is applicable.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  nrSource:
+                    description: Location of the file in an external repository.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data. The enum values provides the list of
+                            concrete types that can be instantiated from this abstract
+                            type.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property. The enum values provides the list of concrete
+                            types that can be instantiated from this abstract type.
+                          type: string
+                      type: object
+                    type: array
+                  nrVersion:
+                    description: Vendor provided version for the file.
+                    type: string
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  platformType:
+                    description: The platform type of the image.
+                    type: string
+                  recommendedBuild:
+                    description: The build which is recommended by Cisco.
+                    type: string
+                  release:
+                    description: A reference to a softwarerepositoryRelease resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  releaseDate:
+                    description: The date on which the file was released or distributed
+                      by its vendor.
+                    type: string
+                  releaseNotesUrl:
+                    description: The url for the release notes of this image.
+                    type: string
+                  sha512sum:
+                    description: The sha512sum of the file. This information is available
+                      for all Cisco distributed images and files imported to the local
+                      repository.
+                    type: string
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  size:
+                    description: The size (in bytes) of the file. This information
+                      is available for all Cisco distributed images and files imported
+                      to the local repository.
+                    format: int64
+                    type: integer
+                  softwareAdvisoryUrl:
+                    description: The software advisory, if any, provided by the vendor
+                      for this file.
+                    type: string
+                  softwareTypeId:
+                    description: The software type id provided by cisco.com.
+                    type: string
+                  supportedModels:
+                    items:
+                      type: string
+                    type: array
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  vendor:
+                    description: The vendor or publisher of this file.
+                    type: string
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: UcsdDistributableStatus defines the observed state of UcsdDistributable.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

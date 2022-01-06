@@ -1,0 +1,7 @@
+apiVersion: meta.pkg.crossplane.io/v1alpha1
+kind: Provider
+metadata:
+  name: provider-jet-intersight
+spec:
+  controller:
+    image: DOCKER_REGISTRY/provider-jet-intersight-controller:VERSION

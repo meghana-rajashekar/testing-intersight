@@ -1,0 +1,1112 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: virtualmachines.virtualization.intersight.jet.crossplane.io
+spec:
+  group: virtualization.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: VirtualMachine
+    listKind: VirtualMachineList
+    plural: virtualmachines
+    singular: virtualmachine
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: VirtualMachine is the Schema for the VirtualMachines API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: VirtualMachineSpec defines the desired state of VirtualMachine
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  action:
+                    description: Action to be performed on a virtual machine (Create,
+                      PowerState, Migrate, Clone etc). * `None` - A place holder for
+                      the default value. * `PowerState` - Power action is performed
+                      on the virtual machine. * `Migrate` - The virtual machine will
+                      be migrated from existing node to a different node in cluster.
+                      The behavior depends on the underlying hypervisor. * `Create`
+                      - The virtual machine will be created on the specified hypervisor.
+                      This action is also useful if the virtual machine creation failed
+                      during first POST operation on VirtualMachine managed object.
+                      User can set this action to retry the virtual machine creation.
+                      * `Delete` - The virtual machine will be deleted from the specified
+                      hypervisor. User can either set this action or can do a DELETE
+                      operation on the VirtualMachine managed object.
+                    type: string
+                  actionInfo:
+                    description: Details of an action performed on the virtual machine.
+                      Contains name of the action performed, status, failure reason
+                      message etc.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        failureReason:
+                          description: Description of reason for failure. Derived
+                            from the workflow failure message.
+                          type: string
+                        name:
+                          description: Name of the Action performed on a resource
+                            like Virtual Machine, Disk etc.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        status:
+                          description: Status of the Action like InProgress, Success,
+                            Failure etc. * `None` - A place holder for the default
+                            value. * `InProgress` - Previous action triggered on the
+                            resource is still running. * `Success` - Previous action
+                            triggered on the resource has completed successfully.
+                            * `Failure` - Previous action triggered on the resource
+                            has failed.
+                          type: string
+                      type: object
+                    type: array
+                  additionalProperties:
+                    type: string
+                  affinitySelectors:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        name:
+                          description: Name of the meta property which identifies
+                            a specific resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        value:
+                          description: Value of the meta property which identifies
+                            a specific resource.
+                          type: string
+                      type: object
+                    type: array
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  antiAffinitySelectors:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        name:
+                          description: Name of the meta property which identifies
+                            a specific resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        value:
+                          description: Value of the meta property which identifies
+                            a specific resource.
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  cloudInitConfig:
+                    description: Cloud init configuration data for virtual machine.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        configType:
+                          description: Virtual machine cloud init configuration type.
+                            * `` - No cloud init specified. Cloud-init configurations
+                            are not sent to hypervisor, if none is selected. * `NoCloudSource`
+                            - Allows the user to provide user-data to the instance
+                            without running a network service. * `CloudConfigDrive`
+                            - Allows the user to provide user-data and network-data
+                            from cloud.
+                          type: string
+                        networkData:
+                          description: Network configuration data for a virtual machine.
+                          type: string
+                        networkDataBase64Encoded:
+                          description: Set to true, if the cloud init network data
+                            is in base64 format.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        userData:
+                          description: User configuration data for a virtual machine
+                            such as adding user, group etc.
+                          type: string
+                        userDataBase64Encoded:
+                          description: Set to true, if the cloud init user data is
+                            in base64 format.
+                          type: boolean
+                      type: object
+                    type: array
+                  cluster:
+                    description: A reference to a virtualizationBaseCluster resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  clusterEsxi:
+                    description: Cluster where virtual machine is deployed.
+                    type: string
+                  cpu:
+                    description: Number of vCPUs allocated to virtual machine.
+                    format: int64
+                    type: integer
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  discovered:
+                    description: Flag to indicate whether the configuration is created
+                      from inventory object.
+                    type: boolean
+                  disk:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        bus:
+                          description: Disk bus name given for a virtual machine.
+                            * `virtio` - Disk uses the same paths as a bare-metal
+                            system. This simplifies physical-to-virtual and virtual-to-virtual
+                            migration. * `sata` - Serial ATA (SATA, abbreviated from
+                            Serial AT Attachment) is a computer bus interface that
+                            connects host bus adapters to mass storage devices such
+                            as hard disk drives, optical drives, and solid-state drives.
+                            * `scsi` - SCSI (Small Computer System Interface) bus
+                            used..
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        name:
+                          description: Virtual machine network bridge name.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        order:
+                          description: Priority order of the disk.
+                          format: int64
+                          type: integer
+                        type:
+                          description: Disk type hdd or cdrom for a virtual machine.
+                            * `hdd` - Allows the virtual machine to mount disk from
+                            hard disk drive (hdd) image. * `cdrom` - Allows the virtual
+                            machine to mount disk from compact disk (cd) image.
+                          type: string
+                        virtualDisk:
+                          description: Virtual disk configuration.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              capacity:
+                                description: Disk capacity to be provided with units
+                                  example - 10Gi.
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              mode:
+                                description: File mode of the disk, example - Filesystem,
+                                  Block. * `Block` - It is a Block virtual disk. *
+                                  `Filesystem` - It is a File system virtual disk.
+                                  * `` - Disk mode is either unknown or not supported.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              sourceCerts:
+                                description: Base64 encoded CA certificates of the
+                                  https source to check against.
+                                type: string
+                              sourceDiskToClone:
+                                description: Source disk name from where the clone
+                                  is done.
+                                type: string
+                              sourceFilePath:
+                                description: Disk image source for the virtual machine.
+                                type: string
+                            type: object
+                          type: array
+                        virtualDiskReference:
+                          description: Name of the existing virtual disk to be attached
+                            to the Virtual Machine.
+                          type: string
+                      type: object
+                    type: array
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  forceDelete:
+                    description: Normally any virtual machine that is still powered
+                      on cannot be deleted. The expected sequence from a user is to
+                      first power off the virtual machine and then invoke the delete
+                      operation. However, in special circumstances, the owner of the
+                      virtual machine may know very well that the virtual machine
+                      is no longer needed and just wants to dispose it off. In such
+                      situations a delete operation of a virtual machine object is
+                      accepted only when this forceDelete attribute is set to true.
+                      Under normal circumstances (forceDelete is false), delete operation
+                      first confirms that the virtual machine is powered off and then
+                      proceeds to delete the virtual machine.
+                    type: boolean
+                  guestOs:
+                    description: Guest operating system running on virtual machine.
+                      * `linux` - A Linux operating system. * `windows` - A Windows
+                      operating system.
+                    type: string
+                  host:
+                    description: A reference to a virtualizationBaseHost resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  hostEsxi:
+                    description: Host where virtual machine is deployed.
+                    type: string
+                  hypervisorType:
+                    description: Identifies the broad product type of the hypervisor
+                      but without any version information. It is here to easily identify
+                      the type of the virtual machine. There are other entities (Host,
+                      Cluster, etc.) that can be indirectly used to determine the
+                      hypervisor but a direct attribute makes it easier to work with.
+                      * `ESXi` - The hypervisor running on the HyperFlex cluster is
+                      a Vmware ESXi hypervisor of any version. * `HyperFlexAp` - The
+                      hypervisor of the virtualization platform is Cisco HyperFlex
+                      Application Platform. * `IWE` - The hypervisor of the virtualization
+                      platform is Cisco Intersight Workload Engine. * `Hyper-V` -
+                      The hypervisor running on the HyperFlex cluster is Microsoft
+                      Hyper-V. * `Unknown` - The hypervisor running on the HyperFlex
+                      cluster is not known.
+                    type: string
+                  interfaces:
+                    items:
+                      properties:
+                        adaptorType:
+                          description: Virtual machine network adaptor type. * `Unknown`
+                            - The type of the network adaptor type is unknown. * `E1000`
+                            - Emulated version of the Intel 82545EM Gigabit Ethernet
+                            NIC. * `SRIOV` - Representation of a virtual function
+                            (VF) on a physical NIC with SR-IOV support. * `VMXNET2`
+                            - VMXNET 2 (Enhanced) is available only for some guest
+                            operating systems on ESX/ESXi 3.5 and later. * `VMXNET3`
+                            - VMXNET 3 offers all the features available in VMXNET
+                            2 and adds several new features. * `E1000E` - E1000E –
+                            emulates a newer real network adapter, the 1 Gbit Intel
+                            82574, and is available for Windows 2012 and later. The
+                            E1000E needs virtual machine hardware version 8 or later.
+                            * `NE2K_PCI` - The Ne2000 network card uses two ring buffers
+                            for packet handling. These are circular buffers made of
+                            256-byte pages that the chip's DMA logic will use to store
+                            received packets or to get received packets. * `PCnet`
+                            - The PCnet-PCI II is a PCI network adapter. It has built-in
+                            support for CRC checks and can automatically pad short
+                            packets to the minimum Ethernet length. * `RTL8139` -
+                            The RTL8139 is a fast Ethernet card that operates at 10/100
+                            Mbps. It is compliant with PCI version 2.0/2.1 and it
+                            is known for reliability and superior performance. * `VirtIO`
+                            - VirtIO is a standardized interface which allows virtual
+                            machines access to simplified "virtual" devices, such
+                            as block devices, network adapters and consoles. Accessing
+                            devices through VirtIO on a guest VM improves performance
+                            over more traditional "emulated" devices, as VirtIO devices
+                            require only the bare minimum setup and configuration
+                            needed to send and receive data, while the host machine
+                            handles the majority of the setup and maintenance of the
+                            actual physical hardware. * `` - Default network adaptor
+                            type supported by the hypervisor.
+                          type: string
+                        additionalProperties:
+                          type: string
+                        bridge:
+                          description: Virtual machine network bridge name.
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        connectAtPowerOn:
+                          description: Connect the adaptor at virtual machine power
+                            on.
+                          type: boolean
+                        directPathIo:
+                          description: Enable the direct path I/O.
+                          type: boolean
+                        ipForwardingEnabled:
+                          description: Set to true, if IP forwarding is enabled on
+                            the NIC.
+                          type: boolean
+                        ipv6Address:
+                          description: Set to true, if IPv6 address should be allocated
+                            for the NIC.
+                          type: boolean
+                        macAddress:
+                          description: Virtual machine network mac address.
+                          type: string
+                        name:
+                          description: Name of the network interface. This may be
+                            different from guest operating system assigned.
+                          type: string
+                        networkId:
+                          description: Identity of the network to which this network
+                            interface belongs.
+                          type: string
+                        nicId:
+                          description: Identity of the network interface.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        order:
+                          description: Order of the NIC attachment to the VM.
+                          format: int64
+                          type: integer
+                        privateIpAllocationMode:
+                          description: Allocation mode for NIC addresses e.g. DHCP
+                            or static. * `DHCP` - Dynamic IP address allocation using
+                            DHCP protocol. * `STATIC_IP` - Assign fixed / static IPs
+                            to resources for use. * `IPAM_CALLOUT` - Use callout scripts
+                            to query cloud IP allocation tools to assign network parameters.
+                            * `PREALLOCATE_IP` - Allows the cloud infrastructure IP
+                            allocation to be dynamically provided before the server
+                            boots up.
+                          type: string
+                        publicIpAllocate:
+                          description: Set to true, if public IP should be allocated
+                            for the NIC.
+                          type: boolean
+                        securityGroups:
+                          items:
+                            type: string
+                          type: array
+                        staticIpAddress:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              gatewayIp:
+                                description: IP address of the device on network which
+                                  forwards local traffic to other networks.
+                                type: string
+                              ipAddress:
+                                description: An IP address is a 32-bit number. It
+                                  uniquely identifies a host in given network.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              subnetMask:
+                                description: A 32 bit number which helps to identify
+                                  the host and rest of the network.
+                                type: string
+                            type: object
+                          type: array
+                        subnetId:
+                          description: Subnet identifier for the NIC.
+                          type: string
+                      type: object
+                    type: array
+                  inventory:
+                    description: A reference to a virtualizationBaseVirtualMachine
+                      resource. When the $expand query parameter is specified, the
+                      referenced resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  labels:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        name:
+                          description: Name of the meta property which identifies
+                            a specific resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        value:
+                          description: Value of the meta property which identifies
+                            a specific resource.
+                          type: string
+                      type: object
+                    type: array
+                  memory:
+                    description: Virtual machine memory in mebi bytes (one mebibyte,
+                      1MiB, is 1048576 bytes, and 1KiB is 1024 bytes). Input must
+                      be a whole number and scientific notation is not acceptable.
+                      For example, enter 1730 and not 1.73e03.
+                    format: int64
+                    type: integer
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  powerState:
+                    description: Expected power state of virtual machine (PowerOn,
+                      PowerOff, Restart). * `PowerOff` - The virtual machine will
+                      be powered off if it is already not in powered off state. If
+                      it is already powered off, no side-effects are expected. * `PowerOn`
+                      - The virtual machine will be powered on if it is already not
+                      in powered on state. If it is already powered on, no side-effects
+                      are expected. * `Suspend` - The virtual machine will be put
+                      into  a suspended state. * `ShutDownGuestOS` - The guest operating
+                      system is shut down gracefully. * `RestartGuestOS` - It can
+                      either act as a reset switch and abruptly reset the guest operating
+                      system, or it can send a restart signal to the guest operating
+                      system so that it shuts down gracefully and restarts. * `Reset`
+                      - Resets the virtual machine abruptly, with no consideration
+                      for work in progress. * `Restart` - The virtual machine will
+                      be restarted only if it is in powered on state. If it is powered
+                      off, it will not be started up. * `Unknown` - Power state of
+                      the entity is unknown.
+                    type: string
+                  provisionType:
+                    description: Identifies the provision type to create a new virtual
+                      machine. * `OVA` - Deploy virtual machine using OVA/F file.
+                      * `Template` - Provision virtual machine using a template file.
+                      * `Discovered` - A virtual machine was 'discovered' and not
+                      created from Intersight. No provisioning information is available.
+                    type: string
+                  registeredDevice:
+                    description: A reference to a assetDeviceRegistration resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                  vmConfig:
+                    description: Virtual machine configuration to provision.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data. The enum values provides the list of
+                            concrete types that can be instantiated from this abstract
+                            type.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property. The enum values provides the list of concrete
+                            types that can be instantiated from this abstract type.
+                          type: string
+                      type: object
+                    type: array
+                  waitForCompletion:
+                    description: This model object can trigger workflows. Use this
+                      option to wait for all running workflows to reach a complete
+                      state.
+                    type: boolean
+                  workflowInfo:
+                    description: A reference to a workflowWorkflowInfo resource. When
+                      the $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: VirtualMachineStatus defines the observed state of VirtualMachine.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

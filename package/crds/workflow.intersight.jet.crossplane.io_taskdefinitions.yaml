@@ -1,0 +1,1089 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: taskdefinitions.workflow.intersight.jet.crossplane.io
+spec:
+  group: workflow.intersight.jet.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - intersightjet
+    kind: TaskDefinition
+    listKind: TaskDefinitionList
+    plural: taskdefinitions
+    singular: taskdefinition
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TaskDefinition is the Schema for the TaskDefinitions API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TaskDefinitionSpec defines the desired state of TaskDefinition
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountMoid:
+                    description: The Account ID for this managed object.
+                    type: string
+                  additionalProperties:
+                    type: string
+                  ancestors:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  catalog:
+                    description: A reference to a workflowCatalog resource. When the
+                      $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  classId:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. This property is used as a discriminator to identify the
+                      type of the payload when marshaling and unmarshaling data.
+                    type: string
+                  clonedFrom:
+                    description: A reference to a workflowTaskDefinition resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  createTime:
+                    description: The time when this managed object was created.
+                    type: string
+                  defaultVersion:
+                    description: When true this will be the task version that is used
+                      when a specific task definition version is not specified. The
+                      very first task definition created with a name will be set as
+                      the default version, after that user can explicitly set any
+                      version of the task definition as the default version.
+                    type: boolean
+                  description:
+                    description: A user friendly description about task on what operations
+                      are done as part of the task execution and any other specific
+                      information about task input and output.
+                    type: string
+                  domainGroupMoid:
+                    description: The DomainGroup ID for this managed object.
+                    type: string
+                  implementedTasks:
+                    description: An array of relationships to workflowTaskDefinition
+                      resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  interfaceTask:
+                    description: A reference to a workflowTaskDefinition resource.
+                      When the $expand query parameter is specified, the referenced
+                      resource is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  internalProperties:
+                    description: Type to capture all the internal properties for the
+                      task definition.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        baseTaskType:
+                          description: This field will hold the base task type like
+                            HttpBaseTask or RemoteAnsibleBaseTask.
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        constraints:
+                          description: This field will hold any constraints a concrete
+                            task definition will specify in order to limit the environment
+                            where the task can execute.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property.
+                                type: string
+                              targetDataType:
+                                description: List of property constraints that helps
+                                  to narrow down task implementations based on target
+                                  device input.
+                                type: string
+                            type: object
+                          type: array
+                        internal:
+                          description: Denotes this is an internal task. Internal
+                            tasks will be hidden from the UI when executing a workflow.
+                          type: boolean
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        owner:
+                          description: The service that owns and is responsible for
+                            execution of the task.
+                          type: string
+                      type: object
+                    type: array
+                  label:
+                    description: A user friendly short name to identify the task definition.
+                      Label can only contain letters (a-z, A-Z), numbers (0-9), hyphen
+                      (-), period (.), colon (:), space ( ), single quote ('), forward
+                      slash (/), or an underscore (_) and must be at least 2 characters.
+                    type: string
+                  licenseEntitlement:
+                    description: License entitlement required to run this task. It
+                      is determined by license requirement of features. * `Base` -
+                      Base as a License type. It is default license type. * `Essential`
+                      - Essential as a License type. * `Standard` - Standard as a
+                      License type. * `Advantage` - Advantage as a License type. *
+                      `Premier` - Premier as a License type. * `IWO-Essential` - IWO-Essential
+                      as a License type. * `IWO-Advantage` - IWO-Advantage as a License
+                      type. * `IWO-Premier` - IWO-Premier as a License type. * `IKS-Advantage`
+                      - IKS-Advantage as a License type.
+                    type: string
+                  modTime:
+                    description: The time when this managed object was last modified.
+                    type: string
+                  moid:
+                    description: The unique identifier of this Managed Object instance.
+                    type: string
+                  nrVersion:
+                    description: The version of the task definition so we can support
+                      multiple versions of a task definition.
+                    format: int64
+                    type: integer
+                  objectType:
+                    description: The fully-qualified name of the instantiated, concrete
+                      type. The value should be the same as the 'ClassId' property.
+                    type: string
+                  owners:
+                    items:
+                      type: string
+                    type: array
+                  parent:
+                    description: A reference to a moBaseMo resource. When the $expand
+                      query parameter is specified, the referenced resource is returned
+                      inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  permissionResources:
+                    description: An array of relationships to moBaseMo resources.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  properties:
+                    description: Type to capture all the properties for the task definition.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        cloneable:
+                          description: When set to false task is not cloneable. It
+                            is set to true only if task is of ApiTask type and it
+                            is not system defined.
+                          type: boolean
+                        externalMeta:
+                          description: When set to false the task definition can only
+                            be used by internal system workflows. When set to true
+                            then the task can be included in user defined workflows.
+                          type: boolean
+                        inputDefinition:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data. The enum values provides
+                                  the list of concrete types that can be instantiated
+                                  from this abstract type.
+                                type: string
+                              default:
+                                description: Default value for the data type. If default
+                                  value was provided and the input was required the
+                                  default value will be used as the input.
+                                items:
+                                  properties:
+                                    additionalProperties:
+                                      type: string
+                                    classId:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. This property
+                                        is used as a discriminator to identify the
+                                        type of the payload when marshaling and unmarshaling
+                                        data.
+                                      type: string
+                                    isValueSet:
+                                      description: A flag that indicates whether a
+                                        default value is given or not. This flag will
+                                        be useful in case of the secure parameter
+                                        where the value will be filtered out in API
+                                        responses.
+                                      type: boolean
+                                    objectType:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. The value should
+                                        be the same as the 'ClassId' property.
+                                      type: string
+                                    override:
+                                      description: Override the default value provided
+                                        for the data type. When true, allow the user
+                                        to enter value for the data type.
+                                      type: boolean
+                                    value:
+                                      description: Default value for the data type.
+                                        If default value was provided and the input
+                                        was required the default value will be used
+                                        as the input.
+                                      type: string
+                                  type: object
+                                type: array
+                              description:
+                                description: Provide a detailed description of the
+                                  data type.
+                                type: string
+                              displayMeta:
+                                description: Captures the meta data needed for displaying
+                                  workflow data types in Intersight User Interface.
+                                items:
+                                  properties:
+                                    additionalProperties:
+                                      type: string
+                                    classId:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. This property
+                                        is used as a discriminator to identify the
+                                        type of the payload when marshaling and unmarshaling
+                                        data.
+                                      type: string
+                                    inventorySelector:
+                                      description: Inventory selector specified for
+                                        primitive data property should be used in
+                                        Intersight User Interface.
+                                      type: boolean
+                                    objectType:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. The value should
+                                        be the same as the 'ClassId' property.
+                                      type: string
+                                    widgetType:
+                                      description: Specify the widget type for data
+                                        display. * `None` - Display none of the widget
+                                        types. * `Radio` - Display the widget as a
+                                        radio button. * `Dropdown` - Display the widget
+                                        as a dropdown. * `GridSelector` - Display
+                                        the widget as a selector. * `DrawerSelector`
+                                        - Display the widget as a selector.
+                                      type: string
+                                  type: object
+                                type: array
+                              inputParameters:
+                                description: JSON formatted mapping from other property
+                                  of the definition to the current property. Input
+                                  parameter mapping is supported only for custom data
+                                  type property in workflow definition and custom
+                                  data type definition. The format to specify mapping
+                                  ina workflow definition when source property is
+                                  of scalar types is '${workflow.input.property}'.
+                                  The format to specify mapping when the source property
+                                  is of object reference and mapping needs to be made
+                                  to the property of the object is '${workflow.input.property.subproperty}'.
+                                  The format to specify mapping in a custom data type
+                                  definition is '${datatype.type.property}'. When
+                                  the current property is of non-scalar type like
+                                  composite custom data type, then mapping can be
+                                  provided to the individual property of the custom
+                                  data type like 'cdt_property:${workflow.input.property}'.
+                                type: string
+                              label:
+                                description: Descriptive label for the data type.
+                                  Label can only contain letters (a-z, A-Z), numbers
+                                  (0-9), hyphen (-), space ( ) or an underscore (_).
+                                  The first and last character in label must be an
+                                  alphanumeric character.
+                                type: string
+                              name:
+                                description: Descriptive name for the data type. Name
+                                  can only contain letters (a-z, A-Z), numbers (0-9),
+                                  hyphen (-) or an underscore (_). The first and last
+                                  character in name must be an alphanumeric character.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property. The enum values provides the
+                                  list of concrete types that can be instantiated
+                                  from this abstract type.
+                                type: string
+                              required:
+                                description: Specifies whether this parameter is required.
+                                  The field is applicable for task and workflow.
+                                type: boolean
+                            type: object
+                          type: array
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        outputDefinition:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data. The enum values provides
+                                  the list of concrete types that can be instantiated
+                                  from this abstract type.
+                                type: string
+                              default:
+                                description: Default value for the data type. If default
+                                  value was provided and the input was required the
+                                  default value will be used as the input.
+                                items:
+                                  properties:
+                                    additionalProperties:
+                                      type: string
+                                    classId:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. This property
+                                        is used as a discriminator to identify the
+                                        type of the payload when marshaling and unmarshaling
+                                        data.
+                                      type: string
+                                    isValueSet:
+                                      description: A flag that indicates whether a
+                                        default value is given or not. This flag will
+                                        be useful in case of the secure parameter
+                                        where the value will be filtered out in API
+                                        responses.
+                                      type: boolean
+                                    objectType:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. The value should
+                                        be the same as the 'ClassId' property.
+                                      type: string
+                                    override:
+                                      description: Override the default value provided
+                                        for the data type. When true, allow the user
+                                        to enter value for the data type.
+                                      type: boolean
+                                    value:
+                                      description: Default value for the data type.
+                                        If default value was provided and the input
+                                        was required the default value will be used
+                                        as the input.
+                                      type: string
+                                  type: object
+                                type: array
+                              description:
+                                description: Provide a detailed description of the
+                                  data type.
+                                type: string
+                              displayMeta:
+                                description: Captures the meta data needed for displaying
+                                  workflow data types in Intersight User Interface.
+                                items:
+                                  properties:
+                                    additionalProperties:
+                                      type: string
+                                    classId:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. This property
+                                        is used as a discriminator to identify the
+                                        type of the payload when marshaling and unmarshaling
+                                        data.
+                                      type: string
+                                    inventorySelector:
+                                      description: Inventory selector specified for
+                                        primitive data property should be used in
+                                        Intersight User Interface.
+                                      type: boolean
+                                    objectType:
+                                      description: The fully-qualified name of the
+                                        instantiated, concrete type. The value should
+                                        be the same as the 'ClassId' property.
+                                      type: string
+                                    widgetType:
+                                      description: Specify the widget type for data
+                                        display. * `None` - Display none of the widget
+                                        types. * `Radio` - Display the widget as a
+                                        radio button. * `Dropdown` - Display the widget
+                                        as a dropdown. * `GridSelector` - Display
+                                        the widget as a selector. * `DrawerSelector`
+                                        - Display the widget as a selector.
+                                      type: string
+                                  type: object
+                                type: array
+                              inputParameters:
+                                description: JSON formatted mapping from other property
+                                  of the definition to the current property. Input
+                                  parameter mapping is supported only for custom data
+                                  type property in workflow definition and custom
+                                  data type definition. The format to specify mapping
+                                  ina workflow definition when source property is
+                                  of scalar types is '${workflow.input.property}'.
+                                  The format to specify mapping when the source property
+                                  is of object reference and mapping needs to be made
+                                  to the property of the object is '${workflow.input.property.subproperty}'.
+                                  The format to specify mapping in a custom data type
+                                  definition is '${datatype.type.property}'. When
+                                  the current property is of non-scalar type like
+                                  composite custom data type, then mapping can be
+                                  provided to the individual property of the custom
+                                  data type like 'cdt_property:${workflow.input.property}'.
+                                type: string
+                              label:
+                                description: Descriptive label for the data type.
+                                  Label can only contain letters (a-z, A-Z), numbers
+                                  (0-9), hyphen (-), space ( ) or an underscore (_).
+                                  The first and last character in label must be an
+                                  alphanumeric character.
+                                type: string
+                              name:
+                                description: Descriptive name for the data type. Name
+                                  can only contain letters (a-z, A-Z), numbers (0-9),
+                                  hyphen (-) or an underscore (_). The first and last
+                                  character in name must be an alphanumeric character.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. The value should be the same as the
+                                  'ClassId' property. The enum values provides the
+                                  list of concrete types that can be instantiated
+                                  from this abstract type.
+                                type: string
+                              required:
+                                description: Specifies whether this parameter is required.
+                                  The field is applicable for task and workflow.
+                                type: boolean
+                            type: object
+                          type: array
+                        retryCount:
+                          description: The number of times a task should be tried
+                            before marking as failed.
+                          format: int64
+                          type: integer
+                        retryDelay:
+                          description: The delay in seconds after which the the task
+                            is re-tried.
+                          format: int64
+                          type: integer
+                        retryPolicy:
+                          description: The retry policy for the task. * `Fixed` -
+                            The enum specifies the option as Fixed where the task
+                            retry happens after fixed time specified by RetryDelay.
+                          type: string
+                        startsWorkflow:
+                          description: Set to true if the task implementation starts
+                            another workfow as part of the execution.
+                          type: boolean
+                        supportStatus:
+                          description: Supported status of the definition. * `Supported`
+                            - The definition is a supported version and there will
+                            be no changes to the mandatory inputs or outputs. * `Beta`
+                            - The definition is a Beta version and this version can
+                            under go changes until the version is marked supported.
+                            * `Deprecated` - The version of definition is deprecated
+                            and typically there will be a higher version of the same
+                            definition that has been added.
+                          type: string
+                        timeout:
+                          description: The timeout value in seconds after which task
+                            will be marked as timed out. Max allowed value is 7 days.
+                          format: int64
+                          type: integer
+                        timeoutPolicy:
+                          description: The timeout policy for the task. * `Timeout`
+                            - The enum specifies the option as Timeout where task
+                            will be timed out after the specified time in Timeout
+                            property. * `Retry` - The enum specifies the option as
+                            Retry where task will be re-tried.
+                          type: string
+                      type: object
+                    type: array
+                  rollbackTasks:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        catalogMoid:
+                          description: The catalog under which the task definition
+                            has been added.
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        description:
+                          description: Description of rollback task definition.
+                          type: string
+                        inputParameters:
+                          description: Input parameters mapping for rollback task
+                            from the input or output of the main task definition.
+                          type: string
+                        name:
+                          description: Name of the task definition which is capable
+                            of doing rollback of this task.
+                          type: string
+                        nrVersion:
+                          description: The version of the task definition.
+                          format: int64
+                          type: integer
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        skipCondition:
+                          description: The rollback task will not be executed if the
+                            given condition evaluates to "true".
+                          type: string
+                        taskMoid:
+                          description: The resolved referenced rollback task definition
+                            managed object.
+                          type: string
+                      type: object
+                    type: array
+                  securePropAccess:
+                    description: If set to true, the task requires access to secure
+                      properties and uses an encryption token associated with a workflow
+                      moid to encrypt or decrypt the secure properties.
+                    type: boolean
+                  sharedScope:
+                    description: Intersight provides pre-built workflows, tasks and
+                      policies to end users through global catalogs. Objects that
+                      are made available through global catalogs are said to have
+                      a 'shared' ownership. Shared objects are either made globally
+                      available to all end users or restricted to end users based
+                      on their license entitlement. Users can use this property to
+                      differentiate the scope (global or a specific license tier)
+                      to which a shared MO belongs.
+                    type: string
+                  tags:
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        key:
+                          description: The string representation of a tag key.
+                          type: string
+                        value:
+                          description: The string representation of a tag value.
+                          type: string
+                      type: object
+                    type: array
+                  taskMetadata:
+                    description: A reference to a workflowTaskMetadata resource. When
+                      the $expand query parameter is specified, the referenced resource
+                      is returned inline.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        moid:
+                          description: The Moid of the referenced REST resource.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the remote type
+                            referred by this relationship.
+                          type: string
+                        selector:
+                          description: 'An OData $filter expression which describes
+                            the REST resource to be referenced. This field may be
+                            set instead of ''moid'' by clients. 1. If ''moid'' is
+                            set this field is ignored. 1. If ''selector'' is set and
+                            ''moid'' is empty/absent from the request, Intersight
+                            determines the Moid of the resource matching the filter
+                            expression and populates it in the MoRef that is part
+                            of the object instance being inserted/updated to fulfill
+                            the REST request. An error is returned if the filter matches
+                            zero or more than one REST resource. An example filter
+                            string is: Serial eq ''3AA8B7T11''.'
+                          type: string
+                      type: object
+                    type: array
+                  versionContext:
+                    description: The versioning info for this managed object.
+                    items:
+                      properties:
+                        additionalProperties:
+                          type: string
+                        classId:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. This property is used as a discriminator
+                            to identify the type of the payload when marshaling and
+                            unmarshaling data.
+                          type: string
+                        interestedMos:
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        nrVersion:
+                          description: The version of the Managed Object, e.g. an
+                            incrementing number or a hash id.
+                          type: string
+                        objectType:
+                          description: The fully-qualified name of the instantiated,
+                            concrete type. The value should be the same as the 'ClassId'
+                            property.
+                          type: string
+                        refMo:
+                          description: A reference to the original Managed Object.
+                          items:
+                            properties:
+                              additionalProperties:
+                                type: string
+                              classId:
+                                description: The fully-qualified name of the instantiated,
+                                  concrete type. This property is used as a discriminator
+                                  to identify the type of the payload when marshaling
+                                  and unmarshaling data.
+                                type: string
+                              moid:
+                                description: The Moid of the referenced REST resource.
+                                type: string
+                              objectType:
+                                description: The fully-qualified name of the remote
+                                  type referred by this relationship.
+                                type: string
+                              selector:
+                                description: 'An OData $filter expression which describes
+                                  the REST resource to be referenced. This field may
+                                  be set instead of ''moid'' by clients. 1. If ''moid''
+                                  is set this field is ignored. 1. If ''selector''
+                                  is set and ''moid'' is empty/absent from the request,
+                                  Intersight determines the Moid of the resource matching
+                                  the filter expression and populates it in the MoRef
+                                  that is part of the object instance being inserted/updated
+                                  to fulfill the REST request. An error is returned
+                                  if the filter matches zero or more than one REST
+                                  resource. An example filter string is: Serial eq
+                                  ''3AA8B7T11''.'
+                                type: string
+                            type: object
+                          type: array
+                        timestamp:
+                          description: The time this versioned Managed Object was
+                            created.
+                          type: string
+                        versionType:
+                          description: Specifies type of version. Currently the only
+                            supported value is "Configured" that is used to keep track
+                            of snapshots of policies and profiles that are intended
+                            to be configured to target endpoints. * `Modified` - Version
+                            created every time an object is modified. * `Configured`
+                            - Version created every time an object is configured to
+                            the service profile. * `Deployed` - Version created for
+                            objects related to a service profile when it is deployed.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: TaskDefinitionStatus defines the observed state of TaskDefinition.
+            properties:
+              atProvider:
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
